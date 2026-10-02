@@ -382,6 +382,106 @@ chunk like this:</p>
 <p>Note that the <code>echo = FALSE</code> parameter was added to the
 code chunk to prevent printing of the R code that generated the
 plot.</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.2.1     ✔ readr     2.2.0
+## ✔ forcats   1.0.1     ✔ stringr   1.6.0
+## ✔ ggplot2   4.0.3     ✔ tibble    3.3.1
+## ✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+## ✔ purrr     1.2.2     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<pre class="r"><code>visitors &lt;- read_csv(&quot;data/UK-visitor-numbers.csv&quot;)</code></pre>
+<pre><code>## Rows: 348 Columns: 6
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (4): attraction, admission, setting, region
+## dbl (2): n_2021, n_2022
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>#Q1(a)
+visitors |&gt; count(region)</code></pre>
+<pre><code>## # A tibble: 12 × 2
+##    region                       n
+##    &lt;chr&gt;                    &lt;int&gt;
+##  1 East Midlands                9
+##  2 East of England             26
+##  3 London                      39
+##  4 North East                  25
+##  5 North West                  21
+##  6 Northern Ireland             9
+##  7 Scotland                    97
+##  8 South East                  34
+##  9 South West                  30
+## 10 Wales                        2
+## 11 West Midlands               35
+## 12 Yorkshire and the Humber    21</code></pre>
+<pre class="r"><code>#Q1(b)
+visitors |&gt; count(admission, setting)</code></pre>
+<pre><code>## # A tibble: 9 × 3
+##   admission setting     n
+##   &lt;chr&gt;     &lt;chr&gt;   &lt;int&gt;
+## 1 Charged   I          21
+## 2 Charged   M          12
+## 3 Charged   O           5
+## 4 Free      I          77
+## 5 Free      M           8
+## 6 Free      O          43
+## 7 Members   I          23
+## 8 Members   M         106
+## 9 Members   O          53</code></pre>
+<pre class="r"><code>#Q2
+visitors |&gt; summarise_all(class)</code></pre>
+<pre><code>## # A tibble: 1 × 6
+##   attraction n_2021  n_2022  admission setting   region   
+##   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;    
+## 1 character  numeric numeric character character character</code></pre>
+<pre class="r"><code>#Q3
+visitors |&gt; arrange(desc(n_2021)) |&gt; head(n=10)</code></pre>
+<pre><code>## # A tibble: 10 × 6
+##    attraction                             n_2021 n_2022 admission setting region
+##    &lt;chr&gt;                                   &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt; 
+##  1 The Crown Estate, Windsor Great Park   5.40e6 5.64e6 Free      O       South…
+##  2 Royal Botanic Gardens Kew              1.96e6 1.96e6 Members   M       London
+##  3 Natural History Museum (South Kensing… 1.57e6 4.65e6 Free      I       London
+##  4 RHS Garden Wisley                      1.41e6 1.49e6 Members   O       South…
+##  5 The British Museum                     1.33e6 4.10e6 Free      I       London
+##  6 Tate Modern                            1.16e6 3.88e6 Free      I       London
+##  7 Somerset House                         9.85e5 2.35e6 Free      M       London
+##  8 Science Museum                         9.56e5 2.33e6 Free      I       London
+##  9 Jeskyns Community Woodland             8.79e5 4.47e5 Free      O       South…
+## 10 V&amp;A South Kensington                   8.58e5 2.37e6 Free      I       London</code></pre>
+<pre class="r"><code>#Q4(d)
+visitors |&gt; filter(n_2022 == 565772) #Knowsley Safari and Knowsley Hall</code></pre>
+<pre><code>## # A tibble: 1 × 6
+##   attraction                        n_2021 n_2022 admission setting region    
+##   &lt;chr&gt;                              &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt;     
+## 1 Knowsley Safari and Knowsley Hall     NA 565772 Members   M       North West</code></pre>
+<pre class="r"><code>#Q4(e)
+visitors |&gt; filter(n_2022 &gt; 1000000) |&gt; count() - 22</code></pre>
+<pre><code>##   n
+## 1 0</code></pre>
+<pre class="r"><code>#Q5(f)
+visitors |&gt; filter(n_2022 &gt; 50000 &amp; n_2022 &lt; 100000) |&gt; count() - 50</code></pre>
+<pre><code>##   n
+## 1 0</code></pre>
+<pre class="r"><code>#Q5(g)
+visitors |&gt; count(region) |&gt; filter(n &gt; 50) #Scotland, 97</code></pre>
+<pre><code>## # A tibble: 1 × 2
+##   region       n
+##   &lt;chr&gt;    &lt;int&gt;
+## 1 Scotland    97</code></pre>
+<p>##Warmup Question Answers 1. “count(visitors)” - 348 attractions 2.
+attraction - chr, n_2021 - dbl, n_2022 - dbl, admission - chr, setting -
+chr, region - chr 3. “arrange(visitors, desc(n_2022))” - The Crown
+Estate, Windsor Great Park 4. “filter(visitors, attraction ==”National
+Museum of Scotland”)” - Free 5. “filter(visitors, setting ==”O”, region
+== “Yorkshire and the Humber”, admission == “Members”, n_2022 &gt;
+“100,000”)” - Fountains Abbey Estate, Kirkstall Abbey, RHS Garden Harlow
+Carr</p>
 </div>
 
 

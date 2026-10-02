@@ -28,3 +28,33 @@ plot(pressure)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+library(tidyverse)
+visitors <- read_csv("data/UK-visitor-numbers.csv")
+#Q1(a)
+visitors |> count(region)
+#Q1(b)
+visitors |> count(admission, setting)
+#Q2
+visitors |> summarise_all(class)
+#Q3
+visitors |> arrange(desc(n_2021)) |> head(n=10)
+#Q4(d)
+visitors |> filter(n_2022 == 565772) #Knowsley Safari and Knowsley Hall
+#Q4(e)
+visitors |> filter(n_2022 > 1000000) |> count() - 22
+#Q5(f)
+visitors |> filter(n_2022 > 50000 & n_2022 < 100000) |> count() - 50
+#Q5(g)
+visitors |> count(region) |> filter(n > 50) #Scotland, 97
+```
+
+##Warmup Question Answers
+1. "count(visitors)" - 348 attractions
+2. attraction - chr, n_2021 - dbl, n_2022 - dbl, admission - chr, setting - chr, region - chr
+3. "arrange(visitors, desc(n_2022))" - The Crown Estate, Windsor Great Park
+4. "filter(visitors, attraction == "National Museum of Scotland")" - Free
+5. "filter(visitors, setting == "O", region == "Yorkshire and the Humber", admission == "Members", n_2022 > "100,000")" - Fountains Abbey Estate, Kirkstall Abbey, RHS Garden Harlow Carr
+
+
