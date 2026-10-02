@@ -65,20 +65,83 @@ outside_mean <- evaluate_mean(visitors, "O")
 inside_mean <- evaluate_mean(visitors, "I")
 mixed_mean <- evaluate_mean(visitors, "M")
 
-if (outside_mean > inside_mean & outside_mean > mixed_mean) {
+max_mean <- max(outside_mean, inside_mean, mixed_mean)
+
+if (outside_mean == max_mean) {
   print("Outside attractions has largest amount of mean visitors in 2022.")
-} else if (inside_mean > outside_mean & inside_mean > mixed_mean){
+} else if (inside_mean == max_mean){
   print("Inside attractions has largest amount of mean visitors in 2022.")
 }else{
   print("Mixed attractions has largest amount of mean visitors in 2022.")
 }
 
 #Q8
-
 visitors_2021 <- visitors |> select(n_2021)
-pmax(visitors_2021)
+max(visitors_2021, na.rm = TRUE)
+min(visitors_2021, na.rm = TRUE)
 
-#need to find max function
+#9
+IQR(visitors_2021$n_2021, na.rm = TRUE) #needed $n_2021 to get numerical values for IQR to function
+
+#after reading hints for this question, realised this is not sufficient, as needed IQR for each of the four nations in the UK
+
+#6(h)
+visitors |>
+  summarise(
+    mean_2021 = mean(n_2021),
+    med_2021 = median(n_2021)
+  )
+#yields NA as result
+
+#6(i) NA - not available, previous questions yields this value as no mathematical operation can be executed when there are null values
+
+#6(j)
+visitors |>
+  summarise(
+    mean_2021 = mean(n_2021, na.rm = TRUE),
+    med_2021 = median(n_2021, na.rm = TRUE)
+  )
+#na.rm removes all the NA values in the column
+
+#7(k)
+visitors %>% 
+  group_by(setting) %>%
+  summarise(
+    mean_2022 = mean(n_2022),
+    med_2022 = median(n_2022)
+  )
+#mean significantly greater has it accounts for extreme values, whereas median does not
+
+#8(l)
+visitors |>
+  summarise(
+    max_2021 = max(n_2021, na.rm = TRUE),
+    min_2021 = min(n_2021, na.rm = TRUE)
+  )
+
+#9(m)
+
+#below is the code from the hints in terms of finding IQRs
+visitors_with_nations <- visitors %>%
+  mutate(
+    nation = case_when(
+      region == "Northern Ireland" ~ "Northern Ireland",
+      region == "Scotland" ~ "Scotland",
+      region == "Wales" ~ "Wales",
+      TRUE ~ "England"
+    )
+  )
+
+visitors_with_nations %>% 
+  group_by(nation) %>%
+  summarise(
+    IQR_2022 = IQR(n_2022)
+  )
+
+#tourist attractions from each nation
+visitors_with_nations |>
+  group_by(nation) |> 
+  count()
 ```
 
 ##Warmup Question Answers

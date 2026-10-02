@@ -493,33 +493,115 @@ outside_mean &lt;- evaluate_mean(visitors, &quot;O&quot;)
 inside_mean &lt;- evaluate_mean(visitors, &quot;I&quot;)
 mixed_mean &lt;- evaluate_mean(visitors, &quot;M&quot;)
 
-if (outside_mean &gt; inside_mean &amp; outside_mean &gt; mixed_mean) {
+max_mean &lt;- max(outside_mean, inside_mean, mixed_mean)
+
+if (outside_mean == max_mean) {
   print(&quot;Outside attractions has largest amount of mean visitors in 2022.&quot;)
-} else if (inside_mean &gt; outside_mean &amp; inside_mean &gt; mixed_mean){
+} else if (inside_mean == max_mean){
   print(&quot;Inside attractions has largest amount of mean visitors in 2022.&quot;)
 }else{
   print(&quot;Mixed attractions has largest amount of mean visitors in 2022.&quot;)
 }</code></pre>
 <pre><code>## [1] &quot;Inside attractions has largest amount of mean visitors in 2022.&quot;</code></pre>
 <pre class="r"><code>#Q8
-
 visitors_2021 &lt;- visitors |&gt; select(n_2021)
-pmax(visitors_2021)</code></pre>
-<pre><code>## # A tibble: 348 × 1
-##    n_2021
-##     &lt;dbl&gt;
-##  1  91690
-##  2  21369
-##  3     NA
-##  4     NA
-##  5   4574
-##  6 310940
-##  7  23199
-##  8     NA
-##  9 212497
-## 10  17789
-## # ℹ 338 more rows</code></pre>
-<pre class="r"><code>#need to find max function</code></pre>
+max(visitors_2021, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 5400000</code></pre>
+<pre class="r"><code>min(visitors_2021, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 1052</code></pre>
+<pre class="r"><code>#9
+IQR(visitors_2021$n_2021, na.rm = TRUE) #needed $n_2021 to get numerical values for IQR to function</code></pre>
+<pre><code>## [1] 243159</code></pre>
+<pre class="r"><code>#after reading hints for this question, realised this is not sufficient, as needed IQR for each of the four nations in the UK
+
+#6(h)
+visitors |&gt;
+  summarise(
+    mean_2021 = mean(n_2021),
+    med_2021 = median(n_2021)
+  )</code></pre>
+<pre><code>## # A tibble: 1 × 2
+##   mean_2021 med_2021
+##       &lt;dbl&gt;    &lt;dbl&gt;
+## 1        NA       NA</code></pre>
+<pre class="r"><code>#yields NA as result
+
+#6(i) NA - not available, previous questions yields this value as no mathematical operation can be executed when there are null values
+
+#6(j)
+visitors |&gt;
+  summarise(
+    mean_2021 = mean(n_2021, na.rm = TRUE),
+    med_2021 = median(n_2021, na.rm = TRUE)
+  )</code></pre>
+<pre><code>## # A tibble: 1 × 2
+##   mean_2021 med_2021
+##       &lt;dbl&gt;    &lt;dbl&gt;
+## 1   232431.   129829</code></pre>
+<pre class="r"><code>#na.rm removes all the NA values in the column
+
+#7(k)
+visitors %&gt;% 
+  group_by(setting) %&gt;%
+  summarise(
+    mean_2022 = mean(n_2022),
+    med_2022 = median(n_2022)
+  )</code></pre>
+<pre><code>## # A tibble: 3 × 3
+##   setting mean_2022 med_2022
+##   &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;
+## 1 I         488522.  204823 
+## 2 M         284800.  198374.
+## 3 O         272077.  127708</code></pre>
+<pre class="r"><code>#mean significantly greater has it accounts for extreme values, whereas median does not
+
+#8(l)
+visitors |&gt;
+  summarise(
+    max_2021 = max(n_2021, na.rm = TRUE),
+    min_2021 = min(n_2021, na.rm = TRUE)
+  )</code></pre>
+<pre><code>## # A tibble: 1 × 2
+##   max_2021 min_2021
+##      &lt;dbl&gt;    &lt;dbl&gt;
+## 1  5400000     1052</code></pre>
+<pre class="r"><code>#9(m)
+
+#below is the code from the hints in terms of finding IQRs
+visitors_with_nations &lt;- visitors %&gt;%
+  mutate(
+    nation = case_when(
+      region == &quot;Northern Ireland&quot; ~ &quot;Northern Ireland&quot;,
+      region == &quot;Scotland&quot; ~ &quot;Scotland&quot;,
+      region == &quot;Wales&quot; ~ &quot;Wales&quot;,
+      TRUE ~ &quot;England&quot;
+    )
+  )
+
+visitors_with_nations %&gt;% 
+  group_by(nation) %&gt;%
+  summarise(
+    IQR_2022 = IQR(n_2022)
+  )</code></pre>
+<pre><code>## # A tibble: 4 × 2
+##   nation           IQR_2022
+##   &lt;chr&gt;               &lt;dbl&gt;
+## 1 England           350362.
+## 2 Northern Ireland  311046 
+## 3 Scotland          127986 
+## 4 Wales             103368.</code></pre>
+<pre class="r"><code>#tourist attractions from each nation
+visitors_with_nations |&gt;
+  group_by(nation) |&gt; 
+  count()</code></pre>
+<pre><code>## # A tibble: 4 × 2
+## # Groups:   nation [4]
+##   nation               n
+##   &lt;chr&gt;            &lt;int&gt;
+## 1 England            240
+## 2 Northern Ireland     9
+## 3 Scotland            97
+## 4 Wales                2</code></pre>
 <p>##Warmup Question Answers 1. “count(visitors)” - 348 attractions 2.
 attraction - chr, n_2021 - dbl, n_2022 - dbl, admission - chr, setting -
 chr, region - chr 3. “arrange(visitors, desc(n_2022))” - The Crown
