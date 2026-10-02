@@ -144,7 +144,8 @@ visitors_with_nations |>
   count()
 ```
 
-##Warmup Question Answers
+## Warmup Question Answers
+
 1. "count(visitors)" - 348 attractions
 2. attraction - chr, n_2021 - dbl, n_2022 - dbl, admission - chr, setting - chr, region - chr
 3. "arrange(visitors, desc(n_2022))" - The Crown Estate, Windsor Great Park
