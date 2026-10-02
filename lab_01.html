@@ -455,7 +455,7 @@ visitors |&gt; arrange(desc(n_2021)) |&gt; head(n=10)</code></pre>
 ##  9 Jeskyns Community Woodland             8.79e5 4.47e5 Free      O       South…
 ## 10 V&amp;A South Kensington                   8.58e5 2.37e6 Free      I       London</code></pre>
 <pre class="r"><code>#Q4(d)
-visitors |&gt; filter(n_2022 == 565772) #Knowsley Safari and Knowsley Hall</code></pre>
+visitors |&gt; filter(n_2022 == 565772)</code></pre>
 <pre><code>## # A tibble: 1 × 6
 ##   attraction                        n_2021 n_2022 admission setting region    
 ##   &lt;chr&gt;                              &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt;     
@@ -469,11 +469,57 @@ visitors |&gt; filter(n_2022 &gt; 50000 &amp; n_2022 &lt; 100000) |&gt; count() 
 <pre><code>##   n
 ## 1 0</code></pre>
 <pre class="r"><code>#Q5(g)
-visitors |&gt; count(region) |&gt; filter(n &gt; 50) #Scotland, 97</code></pre>
+visitors |&gt; count(region) |&gt; filter(n &gt; 50)</code></pre>
 <pre><code>## # A tibble: 1 × 2
 ##   region       n
 ##   &lt;chr&gt;    &lt;int&gt;
 ## 1 Scotland    97</code></pre>
+<pre class="r"><code>#6
+mean(visitors$n_2022, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 351942</code></pre>
+<pre class="r"><code>median(visitors$n_2022, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 184639.5</code></pre>
+<pre class="r"><code>#Q7
+#outside &lt;- visitors |&gt; filter(setting == &quot;O&quot;) |&gt; select(n_2022)
+#outside
+#mean(outside$n_2022, na.rm = TRUE)
+
+evaluate_mean &lt;- function(dataframe, setting_letter){
+  temp_df &lt;- dataframe |&gt; filter(setting == setting_letter) |&gt; select(n_2022)
+  mean(temp_df$n_2022, na.rm = TRUE)
+}
+
+outside_mean &lt;- evaluate_mean(visitors, &quot;O&quot;)
+inside_mean &lt;- evaluate_mean(visitors, &quot;I&quot;)
+mixed_mean &lt;- evaluate_mean(visitors, &quot;M&quot;)
+
+if (outside_mean &gt; inside_mean &amp; outside_mean &gt; mixed_mean) {
+  print(&quot;Outside attractions has largest amount of mean visitors in 2022.&quot;)
+} else if (inside_mean &gt; outside_mean &amp; inside_mean &gt; mixed_mean){
+  print(&quot;Inside attractions has largest amount of mean visitors in 2022.&quot;)
+}else{
+  print(&quot;Mixed attractions has largest amount of mean visitors in 2022.&quot;)
+}</code></pre>
+<pre><code>## [1] &quot;Inside attractions has largest amount of mean visitors in 2022.&quot;</code></pre>
+<pre class="r"><code>#Q8
+
+visitors_2021 &lt;- visitors |&gt; select(n_2021)
+pmax(visitors_2021)</code></pre>
+<pre><code>## # A tibble: 348 × 1
+##    n_2021
+##     &lt;dbl&gt;
+##  1  91690
+##  2  21369
+##  3     NA
+##  4     NA
+##  5   4574
+##  6 310940
+##  7  23199
+##  8     NA
+##  9 212497
+## 10  17789
+## # ℹ 338 more rows</code></pre>
+<pre class="r"><code>#need to find max function</code></pre>
 <p>##Warmup Question Answers 1. “count(visitors)” - 348 attractions 2.
 attraction - chr, n_2021 - dbl, n_2022 - dbl, admission - chr, setting -
 chr, region - chr 3. “arrange(visitors, desc(n_2022))” - The Crown

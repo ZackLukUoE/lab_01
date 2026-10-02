@@ -41,13 +41,44 @@ visitors |> summarise_all(class)
 #Q3
 visitors |> arrange(desc(n_2021)) |> head(n=10)
 #Q4(d)
-visitors |> filter(n_2022 == 565772) #Knowsley Safari and Knowsley Hall
+visitors |> filter(n_2022 == 565772)
 #Q4(e)
 visitors |> filter(n_2022 > 1000000) |> count() - 22
 #Q5(f)
 visitors |> filter(n_2022 > 50000 & n_2022 < 100000) |> count() - 50
 #Q5(g)
-visitors |> count(region) |> filter(n > 50) #Scotland, 97
+visitors |> count(region) |> filter(n > 50)
+#6
+mean(visitors$n_2022, na.rm = TRUE)
+median(visitors$n_2022, na.rm = TRUE)
+#Q7
+#outside <- visitors |> filter(setting == "O") |> select(n_2022)
+#outside
+#mean(outside$n_2022, na.rm = TRUE)
+
+evaluate_mean <- function(dataframe, setting_letter){
+  temp_df <- dataframe |> filter(setting == setting_letter) |> select(n_2022)
+  mean(temp_df$n_2022, na.rm = TRUE)
+}
+
+outside_mean <- evaluate_mean(visitors, "O")
+inside_mean <- evaluate_mean(visitors, "I")
+mixed_mean <- evaluate_mean(visitors, "M")
+
+if (outside_mean > inside_mean & outside_mean > mixed_mean) {
+  print("Outside attractions has largest amount of mean visitors in 2022.")
+} else if (inside_mean > outside_mean & inside_mean > mixed_mean){
+  print("Inside attractions has largest amount of mean visitors in 2022.")
+}else{
+  print("Mixed attractions has largest amount of mean visitors in 2022.")
+}
+
+#Q8
+
+visitors_2021 <- visitors |> select(n_2021)
+pmax(visitors_2021)
+
+#need to find max function
 ```
 
 ##Warmup Question Answers
